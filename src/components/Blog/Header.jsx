@@ -28,7 +28,7 @@ function Header(props) {
           <SearchIcon />
         </IconButton>
         <Button variant="outlined" size="small">
-          Sign up
+          Sign up 
         </Button>
       </Toolbar>
       <Toolbar

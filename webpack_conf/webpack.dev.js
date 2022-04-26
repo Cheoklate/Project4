@@ -53,10 +53,11 @@ module.exports = merge(common, {
     }),
     new HtmlWebpackPlugin({
       // name this file main, so that it does not get automatically requested as a static file
-      publicPath: './main.html',
+      // publicPath: './dist/main.html',
       filename: './main.html',
       template: path.resolve(__dirname, '..', 'src', 'index.html'),
     }),
 
   ].filter(Boolean),
 });
+  
