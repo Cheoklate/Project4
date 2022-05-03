@@ -18,9 +18,10 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { mainListItems, secondaryListItems } from './listItems.jsx';
-import Chart from './Chart.jsx';
 import Deposits from './Deposits.jsx';
 import Orders from './Orders.jsx';
+import TWRChart from './Charts/TWR.jsx';
+import Chart from './Chart.jsx';
 
 function Copyright(props) {
   return (
@@ -172,7 +173,7 @@ function DashboardContent() {
                     height: 240,
                   }}
                 >
-                  <Chart />
+                  <TWRChart />
                 </Paper>
               </Grid>
               {/* Recent Deposits */}
