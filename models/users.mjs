@@ -15,6 +15,12 @@ export default function personModel(sequelize, DataTypes) {
       admin: {
         type: DataTypes.BOOL,
       },
+      firstName:{
+        type: DataTypes.STRING,
+      },
+      lastName:{
+        type: DataTypes.STRING,
+      },
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE,

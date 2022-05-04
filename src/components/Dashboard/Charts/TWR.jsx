@@ -74,7 +74,7 @@ const TWRChart = () => {
 			const docWidth = document.getElementById('chart-container').clientWidth;
 
 			const margin = {
-				top: -50,
+				top: 10,
 				right: (docWidth * 2) / 30,
 				bottom: docWidth * 0.1,
 				left: (docWidth * 2) / 30 + 30,
@@ -93,7 +93,7 @@ const TWRChart = () => {
 						height + margin['top'] + margin['bottom']
 					}`
 				)
-				// .call(responsivefy)
+				.call(responsivefy)
 				.append('g')
 				.attr('transform', `translate(${margin['left']}, ${margin['top']})`);
 
