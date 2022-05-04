@@ -20,6 +20,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import { mainListItems, secondaryListItems } from './listItems.jsx';
 import Deposits from './Deposits.jsx';
 import Orders from './Orders.jsx';
+import XIRRChart from './Charts/XIRR.jsx';
 import TWRChart from './Charts/TWR.jsx';
 import Chart from './Chart.jsx';
 
@@ -164,8 +165,8 @@ function DashboardContent() {
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
               {/* Chart */}
-              <Grid item xs={12} md={8} lg={9}>
-                <Paper
+              <Grid item xs={12} md={8} lg={9} id = "chart-container">
+                <Paper 
                   sx={{
                     p: 2,
                     display: 'flex',
