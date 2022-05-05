@@ -3,15 +3,15 @@ const jsSHA = require('jssha');
 
 module.exports = {
   up: async (queryInterface) => {
-    // const userPassword = 'qwerty';
-    // const shaObj = new jsSHA('SHA-512', 'TEXT', { encoding: 'UTF8' });
-    // shaObj.update(userPassword);
-    // const hashedPassword = shaObj.getHash('HEX');
+    const userPassword = 'test';
+    const shaObj = new jsSHA('SHA-512', 'TEXT', { encoding: 'UTF8' });
+    shaObj.update(userPassword);
+    const hashedPassword = shaObj.getHash('HEX');
 
     const usersList = [
       {
         email: 'cheok-capital@gmail.com',
-        password: 'test',
+        password: userPassword,
         firstName: Gregory,
         lastName: Cheok,
         admin: true,
@@ -20,7 +20,7 @@ module.exports = {
       },
       {
         email: 'gcheok88@gmail.com',
-        password: 'test',
+        password: userPassword,
         firstName: Gregory,
         lastName: Cheok,
         admin: false,
