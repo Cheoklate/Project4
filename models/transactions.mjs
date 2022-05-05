@@ -1,19 +1,19 @@
-export default function personModel(sequelize, DataTypes) {
-    return sequelize.define('person', {
+export default function transactionModel(sequelize, DataTypes) {
+    return sequelize.define('transaction', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: DataTypes.INTEGER,
       },
-      email: {
+      type: {
         type: DataTypes.STRING,
       },
-      password: {
-        type: DataTypes.STRING,
+      value: {
+        type: DataTypes.INTEGER,
       },
-      admin: {
-        type: DataTypes.BOOL,
+      timestamp: {
+        type: DataTypes.STRING,
       },
       createdAt: {
         allowNull: false,
