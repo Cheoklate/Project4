@@ -1,4 +1,4 @@
-export default function SPYModel(sequelize, DataTypes) {
+export default function initSPYModel(sequelize, DataTypes) {
 	return sequelize.define(
 		'SPY',
 		{

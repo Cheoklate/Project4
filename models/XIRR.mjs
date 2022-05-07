@@ -1,4 +1,4 @@
-export default function XIRRModel(sequelize, DataTypes) {
+export default function initXIRRModel(sequelize, DataTypes) {
 	return sequelize.define(
 		'XIRR',
 		{

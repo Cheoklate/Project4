@@ -1,4 +1,4 @@
-export default function transactionModel(sequelize, DataTypes) {
+export default function initTransactionModel(sequelize, DataTypes) {
     return sequelize.define('transaction', {
       id: {
         allowNull: false,

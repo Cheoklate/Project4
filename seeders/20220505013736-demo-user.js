@@ -1,4 +1,3 @@
-const { Checkbox } = require('@mui/material');
 const jsSHA = require('jssha');
 
 module.exports = {
@@ -28,7 +27,17 @@ module.exports = {
         updated_at: new Date(),
       },
     ];
+    const transactionList =[
+      {
+        type: 'deposit',
+        value: 85386.93,
+        timestamp: 1609394400000,
+        created_at: new Date(),
+        updated_at: new Date(),
+      }
+    ]
 
+    await queryInterface.bulkInsert('transactions', transactionList, { returning: true });
     await queryInterface.bulkInsert('users', usersList, { returning: true });
   },
 

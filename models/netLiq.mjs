@@ -1,4 +1,4 @@
-export default function netLiqModel(sequelize, DataTypes) {
+export default function initNetLiqModel(sequelize, DataTypes) {
 	return sequelize.define(
 		'netLiq',
 		{

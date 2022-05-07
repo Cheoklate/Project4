@@ -1,5 +1,5 @@
-export default function personModel(sequelize, DataTypes) {
-    return sequelize.define('person', {
+export default function initUsersModel(sequelize, DataTypes) {
+    return sequelize.define('user', {
       id: {
         allowNull: false,
         autoIncrement: true,
