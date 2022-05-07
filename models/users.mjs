@@ -15,10 +15,10 @@ export default function initUsersModel(sequelize, DataTypes) {
       admin: {
         type: DataTypes.BOOLEAN,
       },
-      firstName:{
+      first_name:{
         type: DataTypes.STRING,
       },
-      lastName:{
+      last_name:{
         type: DataTypes.STRING,
       },
       created_at: {

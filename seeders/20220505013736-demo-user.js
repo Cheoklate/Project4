@@ -11,8 +11,8 @@ module.exports = {
       {
         email: 'cheok-capital@gmail.com',
         password: hashedPassword,
-        firstName: 'Gregory',
-        lastName: 'Cheok',
+        first_name: 'Gregory',
+        last_name: 'Cheok',
         admin: true,
         created_at: new Date(),
         updated_at: new Date(),
@@ -20,8 +20,8 @@ module.exports = {
       {
         email: 'gcheok88@gmail.com',
         password: hashedPassword,
-        firstName: 'Gregory',
-        lastName: 'Cheok',
+        first_name: 'Gregory',
+        last_name: 'Cheok',
         admin: false,
         created_at: new Date(),
         updated_at: new Date(),

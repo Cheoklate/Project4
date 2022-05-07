@@ -50,8 +50,8 @@ db.Transactions = initTransactionModel(sequelize, Sequelize.DataTypes);
 db.SPY = initSPYModel(sequelize, Sequelize.DataTypes);
 db.XIRR = initXIRRModel(sequelize, Sequelize.DataTypes);
 
-db.Transactions.BelongsToMany(db.User, { through: 'user_transactions  ' });
-db.User.BelongsToMany(db.Transactions, { through: 'user_transactions  ' });
+db.Transactions.belongsToMany(db.User, { through: 'user_transactions' });
+db.User.belongsToMany(db.Transactions, { through: 'user_transactions' });
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

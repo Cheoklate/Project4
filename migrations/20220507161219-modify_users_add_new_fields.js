@@ -18,10 +18,10 @@ module.exports = {
 				admin: {
 					type: Sequelize.BOOLEAN,
 				},
-				firstName: {
+				first_name: {
 					type: Sequelize.STRING,
 				},
-				lastName: {
+				last_name: {
 					type: Sequelize.STRING,
 				},
 				created_at: {
