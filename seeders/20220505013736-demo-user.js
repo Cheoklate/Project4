@@ -10,18 +10,18 @@ module.exports = {
     const usersList = [
       {
         email: 'cheok-capital@gmail.com',
-        password: userPassword,
-        firstName: Gregory,
-        lastName: Cheok,
+        password: hashedPassword,
+        firstName: 'Gregory',
+        lastName: 'Cheok',
         admin: true,
         created_at: new Date(),
         updated_at: new Date(),
       },
       {
         email: 'gcheok88@gmail.com',
-        password: userPassword,
-        firstName: Gregory,
-        lastName: Cheok,
+        password: hashedPassword,
+        firstName: 'Gregory',
+        lastName: 'Cheok',
         admin: false,
         created_at: new Date(),
         updated_at: new Date(),
@@ -43,5 +43,7 @@ module.exports = {
 
   down: async (queryInterface) => {
     await queryInterface.bulkDelete('users', null, {});
+    await queryInterface.bulkDelete('transactions', null, {});
+
   },
 };

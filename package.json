@@ -61,6 +61,7 @@
     "d3": "^7.4.4",
     "ejs": "^3.1.5",
     "express": "^4.17.1",
+    "jssha": "^3.2.0",
     "markdown-loader": "^8.0.0",
     "markdown-to-jsx": "^7.1.7",
     "method-override": "^3.0.0",
