@@ -74,7 +74,7 @@ const TWRChart = () => {
 			const docWidth = document.getElementById('chart-container').clientWidth;
 
 			const margin = {
-				top: 10,
+				top: 20,
 				right: (docWidth * 2) / 30,
 				bottom: docWidth * 0.1,
 				left: (docWidth * 2) / 30 + 30,
