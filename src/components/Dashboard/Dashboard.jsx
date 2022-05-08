@@ -25,6 +25,8 @@ import Deposits from './Deposits.jsx';
 import Orders from './Orders.jsx';
 import NetLiqChart from './Charts/NetLiqChart.jsx';
 import HypotheticalGrowthChart from './Charts/HypotheticalGrowth.jsx';
+import XIRRChart from './Charts/XIRR.jsx';
+import TWRChart from './Charts/TWR.jsx';
 import Chart from './Chart.jsx';
 
 function Copyright(props) {
@@ -200,6 +202,7 @@ function DashboardContent() {
 									{selectedChart === 'HypotheticalGrowth' && (
 										<HypotheticalGrowthChart />
 									)}
+									{selectedChart === 'TWR' && <NetLiqChart />}
 								</Paper>
 							</Grid>
 							{/* Recent Deposits */}
