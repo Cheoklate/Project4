@@ -22,12 +22,13 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import Button from '@mui/material/Button';
 import { mainListItems, secondaryListItems } from './listItems.jsx';
 import Deposits from './Deposits.jsx';
-import Orders from './Orders.jsx';
+import Transfers from './Transactions.jsx';
 import NetLiqChart from './Charts/NetLiqChart.jsx';
 import HypotheticalGrowthChart from './Charts/HypotheticalGrowth.jsx';
 import XIRRChart from './Charts/XIRR.jsx';
 import TWRChart from './Charts/TWR.jsx';
 import Chart from './Chart.jsx';
+import Transactions from './Transactions.jsx';
 
 function Copyright(props) {
 	return (
@@ -220,10 +221,10 @@ function DashboardContent() {
 									<Deposits />
 								</Paper>
 							</Grid>
-							{/* Recent Orders */}
+							{/* Recent Transfers */}
 							<Grid item xs={12}>
 								<Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-									<Orders />
+									<Transactions />
 								</Paper>
 							</Grid>
 						</Grid>
