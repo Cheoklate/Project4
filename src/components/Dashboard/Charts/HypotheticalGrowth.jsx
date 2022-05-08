@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 
-const TWRChart = () => {
+const HypotheticalGrowthChart = () => {
 	const d3Chart = useRef();
 
 	const responsivefy = (svg) => {
@@ -75,7 +75,7 @@ const TWRChart = () => {
 
 			const margin = {
 				top: 20,
-				right: (docWidth * 2) / 30,
+				right: (docWidth * 2) / 30 + 50,
 				bottom: docWidth * 0.1,
 				left: (docWidth * 2) / 30 + 30,
 			};
@@ -345,4 +345,4 @@ const TWRChart = () => {
 	);
 };
 
-export default TWRChart;
+export default HypotheticalGrowthChart;
