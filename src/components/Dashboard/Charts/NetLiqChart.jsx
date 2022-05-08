@@ -51,11 +51,11 @@ const NetLiqChart = () => {
 	d3.json('cheok.json').then((cheok) => {
 		const arrayedCheok = arrayer(cheok.data, 'liquidationValue');
 
-		const docWidth = document.getElementById('chart-container').clientWidth;
+		const docWidth = document.getElementById('chart').clientWidth;
 
 		const margin = {
 			top: 20,
-			right: (docWidth * 2) / 30 + 50,
+			right: (docWidth * 2) / 30,
 			bottom: docWidth * 0.1,
 			left: (docWidth * 2) / 30 + 30,
 		};

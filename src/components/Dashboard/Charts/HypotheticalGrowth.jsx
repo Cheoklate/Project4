@@ -71,11 +71,11 @@ const HypotheticalGrowthChart = () => {
 			const normalizedCheok = twrRebase(cheok.data, GROWTH_BASE_AMOUNT, 'twr');
 			// console.log(normalizedSpy)
 			// console.log(normalizedCheok)
-			const docWidth = document.getElementById('chart-container').clientWidth;
+			const docWidth = document.getElementById('chart').clientWidth;
 
 			const margin = {
 				top: 20,
-				right: (docWidth * 2) / 30 + 50,
+				right: (docWidth * 2) / 30,
 				bottom: docWidth * 0.1,
 				left: (docWidth * 2) / 30 + 30,
 			};
