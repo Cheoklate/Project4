@@ -51,73 +51,83 @@ const TWRChart = () => {
 	const spyGrowPercent = (data, key) => {
 		const earliestPoint = d3.least(data, (a) => a.timestamp);
 		const arrayed = [];
-	
+
 		for (let i = 0; i < data.length; i++) {
-			const current = {...data[i] };
-			const normValue = 100 * ((current[key] / earliestPoint[key]) - 1);
+			const current = { ...data[i] };
+			const normValue = 100 * (current[key] / earliestPoint[key] - 1);
 			current.arrayed = normValue;
 			arrayed.push(current);
 		}
-	
+
 		return arrayed;
-	}
-	
-	d3.json('data/spy.json').then(spy => {
-		d3.json('data/twr.json').then((cheok) => {
+	};
+
+	d3.json('spy.json').then((spy) => {
+		d3.json('twr.json').then((cheok) => {
 			const twrCheok = arrayer(cheok.data, 'twr');
 			const twrSpy = spyGrowPercent(spy.data, 'close');
-	
+
 			var n;
 			for (n = 0; n < twrCheok.length; n++) {
 				twrCheok[n].arrayed = Number(parseFloat(twrCheok[n].twr).toFixed(2));
 			}
-	
-			const docWidth = document.getElementById('chart4').clientWidth;
-	
+
+			const docWidth = document.getElementById('chart-container').clientWidth;
+
 			const margin = {
-				top: docWidth * 0.1 * 0.6,
-				right: docWidth * 2 / 30 + 10,
-				bottom: docWidth * 0.1 * 0.6,
-				left: docWidth * 2 / 30 + 30
+				top: 20,
+				right: (docWidth * 2) / 30 + 50,
+				bottom: docWidth * 0.1,
+				left: (docWidth * 2) / 30 + 30,
 			};
 			const width = docWidth - margin.left - margin.right; // Use the window's width
 			const height = (docWidth - margin.left - margin.right) * 0.6; // use set width to maintain ratio
-	
+
 			// add chart SVG to the page
 			const svg = d3
-				.select('#chart4')
+				.select('#chart')
 				.append('svg')
 				.classed('svg-container', true)
-				.attr('viewBox', `0 0 ${width + margin['left'] + margin['right']} ${height + margin['top'] + margin['bottom']}`)
+				.attr(
+					'viewBox',
+					`0 0 ${width + margin['left'] + margin['right']} ${
+						height + margin['top'] + margin['bottom']
+					}`
+				)
 				.call(responsivefy)
 				.append('g')
 				.attr('transform', `translate(${margin['left']}, ${margin['top']})`);
-	
+
 			const responsiveFontSize = (d) => `${9 + width / 120}px`;
-	
+
 			// create the axes component
-	
+
 			// find data range
-			const combined = [twrCheok, twrSpy]
-	
+			const combined = [twrCheok, twrSpy];
+
 			// Performing clamps for time x-axis, i.e. taking max of mins, and mins of maxes
-			const xMin = d3.max(combined.map((data) => d3.min(data, d => d.timestamp)));
-			const xMax = d3.min(combined.map((data) => d3.max(data, d => d.timestamp)));
-	
-			const yMin = d3.min(combined.map((data) => d3.min(data, d => d.arrayed)));
-			const yMax = d3.max(combined.map((data) => d3.max(data, d => d.arrayed)));
-			
+			const xMin = d3.max(
+				combined.map((data) => d3.min(data, (d) => d.timestamp))
+			);
+			const xMax = d3.min(
+				combined.map((data) => d3.max(data, (d) => d.timestamp))
+			);
+
+			const yMin = d3.min(
+				combined.map((data) => d3.min(data, (d) => d.arrayed))
+			);
+			const yMax = d3.max(
+				combined.map((data) => d3.max(data, (d) => d.arrayed))
+			);
+
 			// scale using range
-			const xScale = d3
-				.scaleTime()
-				.domain([xMin, xMax])
-				.range([0, width]);
-	
+			const xScale = d3.scaleTime().domain([xMin, xMax]).range([0, width]);
+
 			const yScale = d3
 				.scaleLinear()
 				.domain([yMin, yMax])
 				.range([height * 0.9, 0]);
-	
+
 			// Drawing bottom axis
 			svg
 				.append('line')
@@ -126,7 +136,7 @@ const TWRChart = () => {
 				.attr('x2', (d) => {
 					return xScale(xMax);
 				});
-	
+
 			svg
 				.append('text')
 				.attr('transform', `translate(${xScale(xMin)}, ${height})`)
@@ -134,7 +144,7 @@ const TWRChart = () => {
 				.style('opacity', '0.5')
 				.style('font-size', responsiveFontSize)
 				.text(moment(xMin).format('DD/MM/YYYY'));
-	
+
 			svg
 				.append('text')
 				.attr('transform', `translate(${xScale(xMax)}, ${height})`)
@@ -143,9 +153,12 @@ const TWRChart = () => {
 				.attr('text-anchor', 'end')
 				.style('font-size', responsiveFontSize)
 				.text(moment(xMax).format('DD/MM/YYYY'));
-	
-			const twrLine = d3.line().x((d) => xScale(d.timestamp)).y((d) => yScale(d.arrayed));
-			
+
+			const twrLine = d3
+				.line()
+				.x((d) => xScale(d.timestamp))
+				.y((d) => yScale(d.arrayed));
+
 			// "SPY" path
 			svg
 				.append('path')
@@ -156,31 +169,31 @@ const TWRChart = () => {
 				.attr('stroke', '#00d1b2')
 				.attr('stroke-width', '2')
 				.attr('opacity', '0.4');
-	
+
 			// "SPY" line label
 			svg
-				.append("text")
+				.append('text')
 				.data([twrSpy[twrSpy.length - 1]])
-				.attr("transform", d => {
+				.attr('transform', (d) => {
 					return `translate(${xScale(d.timestamp)}, ${yScale(d.arrayed)})`;
 				})
-				.attr("x", 5)
-				.attr("dy", "0.35em")
-				.style("fill", "#00d1b2")
-				.style("font-size", responsiveFontSize)
-				.text("SPY");
-	
+				.attr('x', 5)
+				.attr('dy', '0.35em')
+				.style('fill', '#00d1b2')
+				.style('font-size', responsiveFontSize)
+				.text('SPY');
+
 			// Cheok path
 			svg
-			  .append("path")
-			  .data([twrCheok])
-			  .style("fill", "none")
-			  .attr("d", twrLine)
-			  .attr("id", "cheokChart")
-			  .attr("stroke", "#ea00f2")
-			  .attr("stroke-width", "2")
-			  .attr("opacity", "0.4");
-	
+				.append('path')
+				.data([twrCheok])
+				.style('fill', 'none')
+				.attr('d', twrLine)
+				.attr('id', 'cheokChart')
+				.attr('stroke', '#ea00f2')
+				.attr('stroke-width', '2')
+				.attr('opacity', '0.4');
+
 			// Base value
 			svg
 				.append('text')
@@ -193,25 +206,28 @@ const TWRChart = () => {
 				.attr('dy', '0.35em')
 				.style('font-size', responsiveFontSize)
 				.text(`${numberWithCommas(twrCheok[0].arrayed)}%`);
-	
+
 			// Base line
 			svg
 				.append('line')
 				.style('stroke', 'grey')
 				.style('stroke-dasharray', '2, 2')
 				.style('opacity', 0.4)
-				.attr('transform', `translate(${xScale(xMin)}, ${yScale(twrCheok[0].arrayed)})`)
+				.attr(
+					'transform',
+					`translate(${xScale(xMin)}, ${yScale(twrCheok[0].arrayed)})`
+				)
 				.attr('x2', (d) => {
 					return xScale(xMax);
 				});
-	
+
 			const cheokG = svg.append('g').data([
 				{
 					first: twrCheok[0],
-					last: twrCheok[twrCheok.length - 1]
-				}
+					last: twrCheok[twrCheok.length - 1],
+				},
 			]);
-	
+
 			const cheokLatestLiquidation = cheokG
 				.append('text')
 				.attr('transform', (d) => {
@@ -225,7 +241,7 @@ const TWRChart = () => {
 				.text((d) => {
 					return `${numberWithCommas(d.last.arrayed)}%`;
 				});
-	
+
 			cheokG
 				.append('line')
 				.style('stroke', 'grey')
@@ -237,35 +253,43 @@ const TWRChart = () => {
 				.attr('x2', (d) => {
 					return xScale(d.last.timestamp);
 				});
-				
-			const spyG = svg.append("g").data([{
-				first: twrSpy[0],
-				last: twrSpy[twrSpy.length - 1]
-			}]);
-	
-			spyG.append("text")
-				.attr("transform", d => {
-					return `translate(${xScale(d.first.timestamp)}, ${yScale(d.last.arrayed)})`;
+
+			const spyG = svg.append('g').data([
+				{
+					first: twrSpy[0],
+					last: twrSpy[twrSpy.length - 1],
+				},
+			]);
+
+			spyG
+				.append('text')
+				.attr('transform', (d) => {
+					return `translate(${xScale(d.first.timestamp)}, ${yScale(
+						d.last.arrayed
+					)})`;
 				})
-				.attr("x", -10)
-				.attr("text-anchor", "end")
-				.attr("dy", "0.35em")
-				.style("font-size", responsiveFontSize)
-				.text(d => {
+				.attr('x', -10)
+				.attr('text-anchor', 'end')
+				.attr('dy', '0.35em')
+				.style('font-size', responsiveFontSize)
+				.text((d) => {
 					return `${Number(parseFloat(d.last.arrayed).toFixed(2))}%`;
 				});
-	
-			spyG.append("line")
-				.style("stroke", "grey")
-				.style("stroke-dasharray", ("2, 2"))
-				.style("opacity", 0.4)
-				.attr("transform", d => {
-					return `translate(${xScale(d.first.timestamp)}, ${yScale(d.last.arrayed)})`;
+
+			spyG
+				.append('line')
+				.style('stroke', 'grey')
+				.style('stroke-dasharray', '2, 2')
+				.style('opacity', 0.4)
+				.attr('transform', (d) => {
+					return `translate(${xScale(d.first.timestamp)}, ${yScale(
+						d.last.arrayed
+					)})`;
 				})
-				.attr("x2", d => {
+				.attr('x2', (d) => {
 					return xScale(d.last.timestamp);
-				})
-	
+				});
+
 			// Chart floor line
 			svg
 				.append('line')
@@ -276,7 +300,7 @@ const TWRChart = () => {
 				.attr('x2', (d) => {
 					return xScale(xMax);
 				});
-	
+
 			// Chart floor label
 			svg
 				.append('text')
@@ -286,7 +310,7 @@ const TWRChart = () => {
 				.attr('dy', '0.35em')
 				.style('font-size', responsiveFontSize)
 				.text(`${numberWithCommas(yMin)}%`);
-	
+
 			// Chart ceiling line
 			svg
 				.append('line')
@@ -297,7 +321,7 @@ const TWRChart = () => {
 				.attr('x2', (d) => {
 					return xScale(xMax);
 				});
-	
+
 			// Chart ceiling label
 			svg
 				.append('text')
@@ -307,7 +331,7 @@ const TWRChart = () => {
 				.attr('dy', '0.35em')
 				.style('font-size', responsiveFontSize)
 				.text(`${numberWithCommas(yMax)}%`);
-	
+
 			let i = 0;
 			d3.timer(() => {
 				const hue = `hsl(${i % 360}, 100%, 50%)`;
@@ -315,13 +339,10 @@ const TWRChart = () => {
 				cheokLatestLiquidation.style('fill', hue);
 				i += 1;
 			});
-		})
+		});
 	});
 
-	return (
-		<div id='chart'>
-		</div>
-	);
+	return <div id='chart'></div>;
 };
 
 export default TWRChart;

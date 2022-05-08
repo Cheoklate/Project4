@@ -186,6 +186,7 @@ function DashboardContent() {
 								Hypothetical Growth
 							</Button>
 							<Button onClick={() => setSelectedChart('TWR')}>TWR</Button>
+							<Button onClick={() => setSelectedChart('XIRR')}>XIRR</Button>
 						</ButtonGroup>
 						<Grid container spacing={3}>
 							{/* Chart */}
@@ -202,7 +203,8 @@ function DashboardContent() {
 									{selectedChart === 'HypotheticalGrowth' && (
 										<HypotheticalGrowthChart />
 									)}
-									{selectedChart === 'TWR' && <NetLiqChart />}
+									{selectedChart === 'TWR' && <TWRChart />}
+									{selectedChart === 'XIRR' && <XIRRChart />}
 								</Paper>
 							</Grid>
 							{/* Recent Deposits */}
