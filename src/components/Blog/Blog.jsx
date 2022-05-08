@@ -14,7 +14,6 @@ import Sidebar from './Sidebar.jsx';
 import Footer from './Footer.jsx';
 import post1 from './blog-post.1.md';
 import post2 from './blog-post.2.md';
-import post3 from './blog-post.3.md';
 
 const sections = [
 	{ title: 'About us', url: '#' },
@@ -53,16 +52,16 @@ const featuredPosts = [
 	},
 ];
 
-const posts = [post1, post2, post3];
+const posts = [post1, post2];
 
 const sidebar = {
 	title: 'About',
 	description:
-		'Etiam porta sem malesuada magna mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.',
+		'Welcome to Cheok Capital.',
 	archives: [
-		{ title: 'March 2020', url: '#' },
-		{ title: 'February 2020', url: '#' },
-		{ title: 'January 2020', url: '#' },
+		{ title: 'March 2022', url: '#' },
+		{ title: 'February 2022', url: '#' },
+		{ title: 'January 2022', url: '#' },
 	],
 	social: [
 		{ name: 'GitHub', icon: GitHubIcon, url: 'https://github.com/Cheoklate' },
@@ -98,8 +97,8 @@ export default function Blog() {
 				</main>
 			</Container>
 			<Footer
-				title='Footer'
-				description='Something here to give the footer a purpose!'
+				title=''
+				description=''
 			/>
 		</ThemeProvider>
 	);
