@@ -1,6 +1,6 @@
-export default function initUserTransactionsModel(sequelize, DataTypes) {
+export default function initXIRRModel(sequelize, DataTypes) {
 	return sequelize.define(
-		'user_transactions',
+		'XIRR',
 		{
 			id: {
 				allowNull: false,
@@ -8,27 +8,21 @@ export default function initUserTransactionsModel(sequelize, DataTypes) {
 				primaryKey: true,
 				type: DataTypes.INTEGER,
 			},
-			userID: {
+			value: {
+				allowNull: false,
 				type: DataTypes.INTEGER,
-				references: {
-					model: 'users',
-					key: 'id',
-				},
 			},
-			transactionID: {
+            timestamp:{
+                allowNull: false,
 				type: DataTypes.INTEGER,
-				references: {
-					model: 'transactions',
-					key: 'id',
-				},
-			},
+            },
 			created_at: {
 				allowNull: false,
-				type: Sequelize.DATE,
+				type: DataTypes.DATE,
 			},
 			updated_at: {
 				allowNull: false,
-				type: Sequelize.DATE,
+				type: DataTypes.DATE,
 			},
 		},
 		{ underscored: true }

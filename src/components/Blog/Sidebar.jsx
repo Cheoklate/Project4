@@ -33,7 +33,7 @@ function Sidebar(props) {
         <Link
           display="block"
           variant="body1"
-          href="#"
+          href={network.url}
           key={network.name}
           sx={{ mb: 0.5 }}
         >
@@ -59,6 +59,7 @@ Sidebar.propTypes = {
     PropTypes.shape({
       icon: PropTypes.elementType.isRequired,
       name: PropTypes.string.isRequired,
+      url: PropTypes.string.isRequired,
     }),
   ).isRequired,
   title: PropTypes.string.isRequired,

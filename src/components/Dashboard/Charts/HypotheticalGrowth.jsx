@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 
-const TWRChart = () => {
+const HypotheticalGrowthChart = () => {
 	const d3Chart = useRef();
 
 	const responsivefy = (svg) => {
@@ -31,47 +31,46 @@ const TWRChart = () => {
 		// api docs: https://github.com/mbostock/d3/wiki/Selections#on
 		d3.select(window).on('resize.' + container.attr('id'), resize);
 	};
+
 	const numberWithCommas = (x) => {
 		return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 	};
 
-	const arrayer = (data, key) => {
-		const arrayed = [];
-
-		for (let i = 0; i < data.length; i++) {
-			const current = { ...data[i] };
-			const arrayEle = current[key];
-			current.arrayed = arrayEle;
-			arrayed.push(current);
-		}
-
-		return arrayed;
-	};
-
-	const spyGrowPercent = (data, key) => {
+	const normalize = (data, base, key) => {
 		const earliestPoint = d3.least(data, (a) => a.timestamp);
-		const arrayed = [];
+		const normalized = [];
 
 		for (let i = 0; i < data.length; i++) {
 			const current = { ...data[i] };
-			const normValue = 100 * (current[key] / earliestPoint[key] - 1);
-			current.arrayed = normValue;
-			arrayed.push(current);
+			const normValue = (base * current[key]) / earliestPoint[key];
+			current.normalized = normValue;
+			normalized.push(current);
 		}
 
-		return arrayed;
+		return normalized;
 	};
+
+	const twrRebase = (data, base, key) => {
+		const normalized = [];
+
+		for (let i = 0; i < data.length; i++) {
+			const current = { ...data[i] };
+			const normValue = base * (current[key] / 100 + 1);
+			current.normalized = normValue;
+			normalized.push(current);
+		}
+
+		return normalized;
+	};
+
+	const GROWTH_BASE_AMOUNT = 10000;
 
 	d3.json('spy.json').then((spy) => {
 		d3.json('twr.json').then((cheok) => {
-			const twrCheok = arrayer(cheok.data, 'twr');
-			const twrSpy = spyGrowPercent(spy.data, 'close');
-
-			var n;
-			for (n = 0; n < twrCheok.length; n++) {
-				twrCheok[n].arrayed = Number(parseFloat(twrCheok[n].twr).toFixed(2));
-			}
-
+			const normalizedSpy = normalize(spy.data, GROWTH_BASE_AMOUNT, 'close');
+			const normalizedCheok = twrRebase(cheok.data, GROWTH_BASE_AMOUNT, 'twr');
+			// console.log(normalizedSpy)
+			// console.log(normalizedCheok)
 			const docWidth = document.getElementById('chart').clientWidth;
 
 			const margin = {
@@ -103,7 +102,7 @@ const TWRChart = () => {
 			// create the axes component
 
 			// find data range
-			const combined = [twrCheok, twrSpy];
+			const combined = [normalizedCheok, normalizedSpy];
 
 			// Performing clamps for time x-axis, i.e. taking max of mins, and mins of maxes
 			const xMin = d3.max(
@@ -114,10 +113,10 @@ const TWRChart = () => {
 			);
 
 			const yMin = d3.min(
-				combined.map((data) => d3.min(data, (d) => d.arrayed))
+				combined.map((data) => d3.min(data, (d) => d.normalized))
 			);
 			const yMax = d3.max(
-				combined.map((data) => d3.max(data, (d) => d.arrayed))
+				combined.map((data) => d3.max(data, (d) => d.normalized))
 			);
 
 			// scale using range
@@ -154,17 +153,17 @@ const TWRChart = () => {
 				.style('font-size', responsiveFontSize)
 				.text(moment(xMax).format('DD/MM/YYYY'));
 
-			const twrLine = d3
+			const line = d3
 				.line()
 				.x((d) => xScale(d.timestamp))
-				.y((d) => yScale(d.arrayed));
+				.y((d) => yScale(d.normalized));
 
 			// "SPY" path
 			svg
 				.append('path')
-				.data([twrSpy])
+				.data([normalizedSpy])
 				.style('fill', 'none')
-				.attr('d', twrLine)
+				.attr('d', line)
 				.attr('id', 'spyChart')
 				.attr('stroke', '#00d1b2')
 				.attr('stroke-width', '2')
@@ -173,9 +172,9 @@ const TWRChart = () => {
 			// "SPY" line label
 			svg
 				.append('text')
-				.data([twrSpy[twrSpy.length - 1]])
+				.data([normalizedSpy[normalizedSpy.length - 1]])
 				.attr('transform', (d) => {
-					return `translate(${xScale(d.timestamp)}, ${yScale(d.arrayed)})`;
+					return `translate(${xScale(d.timestamp)}, ${yScale(d.normalized)})`;
 				})
 				.attr('x', 5)
 				.attr('dy', '0.35em')
@@ -186,26 +185,24 @@ const TWRChart = () => {
 			// Cheok path
 			svg
 				.append('path')
-				.data([twrCheok])
+				.data([normalizedCheok])
 				.style('fill', 'none')
-				.attr('d', twrLine)
+				.attr('d', line)
 				.attr('id', 'cheokChart')
-				.attr('stroke', '#ea00f2')
-				.attr('stroke-width', '2')
-				.attr('opacity', '0.4');
+				.attr('stroke-width', '2');
 
 			// Base value
 			svg
 				.append('text')
-				.data([twrCheok[0]])
+				.data([normalizedCheok[0]])
 				.attr('transform', (d) => {
-					return `translate(${xScale(xMin)}, ${yScale(d.arrayed)})`;
+					return `translate(${xScale(xMin)}, ${yScale(d.normalized)})`;
 				})
 				.attr('text-anchor', 'end')
 				.attr('x', -10)
 				.attr('dy', '0.35em')
 				.style('font-size', responsiveFontSize)
-				.text(`${numberWithCommas(twrCheok[0].arrayed)}%`);
+				.text(`$${numberWithCommas(GROWTH_BASE_AMOUNT)}`);
 
 			// Base line
 			svg
@@ -215,7 +212,7 @@ const TWRChart = () => {
 				.style('opacity', 0.4)
 				.attr(
 					'transform',
-					`translate(${xScale(xMin)}, ${yScale(twrCheok[0].arrayed)})`
+					`translate(${xScale(xMin)}, ${yScale(GROWTH_BASE_AMOUNT)})`
 				)
 				.attr('x2', (d) => {
 					return xScale(xMax);
@@ -223,15 +220,15 @@ const TWRChart = () => {
 
 			const cheokG = svg.append('g').data([
 				{
-					first: twrCheok[0],
-					last: twrCheok[twrCheok.length - 1],
+					first: normalizedCheok[0],
+					last: normalizedCheok[normalizedCheok.length - 1],
 				},
 			]);
 
 			const cheokLatestLiquidation = cheokG
 				.append('text')
 				.attr('transform', (d) => {
-					return `translate(${xScale(xMin)}, ${yScale(d.last.arrayed)})`;
+					return `translate(${xScale(xMin)}, ${yScale(d.last.normalized)})`;
 				})
 				.attr('x', -10)
 				.attr('text-anchor', 'end')
@@ -239,7 +236,7 @@ const TWRChart = () => {
 				.style('font-size', responsiveFontSize)
 				.style('font-weight', 'bold')
 				.text((d) => {
-					return `${numberWithCommas(d.last.arrayed)}%`;
+					return `$${numberWithCommas(Math.floor(d.last.normalized))}`;
 				});
 
 			cheokG
@@ -248,7 +245,7 @@ const TWRChart = () => {
 				.style('stroke-dasharray', '2, 2')
 				.style('opacity', 0.4)
 				.attr('transform', (d) => {
-					return `translate(${xScale(xMin)}, ${yScale(d.last.arrayed)})`;
+					return `translate(${xScale(xMin)}, ${yScale(d.last.normalized)})`;
 				})
 				.attr('x2', (d) => {
 					return xScale(d.last.timestamp);
@@ -256,8 +253,8 @@ const TWRChart = () => {
 
 			const spyG = svg.append('g').data([
 				{
-					first: twrSpy[0],
-					last: twrSpy[twrSpy.length - 1],
+					first: normalizedSpy[0],
+					last: normalizedSpy[normalizedSpy.length - 1],
 				},
 			]);
 
@@ -265,7 +262,7 @@ const TWRChart = () => {
 				.append('text')
 				.attr('transform', (d) => {
 					return `translate(${xScale(d.first.timestamp)}, ${yScale(
-						d.last.arrayed
+						d.last.normalized
 					)})`;
 				})
 				.attr('x', -10)
@@ -273,7 +270,7 @@ const TWRChart = () => {
 				.attr('dy', '0.35em')
 				.style('font-size', responsiveFontSize)
 				.text((d) => {
-					return `${Number(parseFloat(d.last.arrayed).toFixed(2))}%`;
+					return `$${numberWithCommas(Math.floor(d.last.normalized))}`;
 				});
 
 			spyG
@@ -283,7 +280,7 @@ const TWRChart = () => {
 				.style('opacity', 0.4)
 				.attr('transform', (d) => {
 					return `translate(${xScale(d.first.timestamp)}, ${yScale(
-						d.last.arrayed
+						d.last.normalized
 					)})`;
 				})
 				.attr('x2', (d) => {
@@ -302,14 +299,14 @@ const TWRChart = () => {
 				});
 
 			// Chart floor label
-			svg
+			spyG
 				.append('text')
 				.attr('transform', `translate(${xScale(xMin)}, ${yScale(yMin)})`)
 				.attr('x', -10)
 				.attr('text-anchor', 'end')
 				.attr('dy', '0.35em')
 				.style('font-size', responsiveFontSize)
-				.text(`${numberWithCommas(yMin)}%`);
+				.text(`$${numberWithCommas(Math.floor(yMin))}`);
 
 			// Chart ceiling line
 			svg
@@ -323,14 +320,14 @@ const TWRChart = () => {
 				});
 
 			// Chart ceiling label
-			svg
+			spyG
 				.append('text')
 				.attr('transform', `translate(${xScale(xMin)}, ${yScale(yMax)})`)
 				.attr('x', -10)
 				.attr('text-anchor', 'end')
 				.attr('dy', '0.35em')
 				.style('font-size', responsiveFontSize)
-				.text(`${numberWithCommas(yMax)}%`);
+				.text(`$${numberWithCommas(Math.floor(yMax))}`);
 
 			let i = 0;
 			d3.timer(() => {
@@ -342,7 +339,10 @@ const TWRChart = () => {
 		});
 	});
 
-	return <div id='chart'></div>;
+	return (
+		<div id='chart'>
+		</div>
+	);
 };
 
-export default TWRChart;
+export default HypotheticalGrowthChart;

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 
-const XIRRChart = () => {
+const NetLiqChart = () => {
 	const d3Chart = useRef();
 
 	const responsivefy = (svg) => {
@@ -48,15 +48,8 @@ const XIRRChart = () => {
 		return arrayed;
 	};
 
-	d3.json('xirr.json').then((cheok) => {
-		const xirrCheok = arrayer(cheok.data, 'xirr');
-
-		var n;
-		for (n = 0; n < xirrCheok.length; n++) {
-			xirrCheok[n].arrayed = Number(
-				parseFloat(xirrCheok[n].xirr * 100).toFixed(2)
-			);
-		}
+	d3.json('cheok.json').then((cheok) => {
+		const arrayedCheok = arrayer(cheok.data, 'liquidationValue');
 
 		const docWidth = document.getElementById('chart').clientWidth;
 
@@ -68,7 +61,6 @@ const XIRRChart = () => {
 		};
 		const width = docWidth - margin.left - margin.right; // Use the window's width
 		const height = (docWidth - margin.left - margin.right) * 0.6; // use set width to maintain ratio
-
 		// add chart SVG to the page
 		const svg = d3
 			.select('#chart')
@@ -91,11 +83,11 @@ const XIRRChart = () => {
 		// find data range
 
 		// Performing clamps for time x-axis, i.e. taking max of mins, and mins of maxes
-		const xMin = d3.min(xirrCheok, (d) => d.timestamp);
-		const xMax = d3.max(xirrCheok, (d) => d.timestamp);
+		const xMin = d3.min(arrayedCheok, (d) => d.timestamp);
+		const xMax = d3.max(arrayedCheok, (d) => d.timestamp);
 
-		const yMin = d3.min(xirrCheok, (d) => d.arrayed);
-		const yMax = d3.max(xirrCheok, (d) => d.arrayed);
+		const yMin = d3.min(arrayedCheok, (d) => d.arrayed);
+		const yMax = d3.max(arrayedCheok, (d) => d.arrayed);
 
 		// scale using range
 		const xScale = d3.scaleTime().domain([xMin, xMax]).range([0, width]);
@@ -131,7 +123,7 @@ const XIRRChart = () => {
 			.style('font-size', responsiveFontSize)
 			.text(moment(xMax).format('DD/MM/YYYY'));
 
-		const xirrLine = d3
+		const neLiqLine = d3
 			.line()
 			.x((d) => xScale(d.timestamp))
 			.y((d) => yScale(d.arrayed));
@@ -139,9 +131,9 @@ const XIRRChart = () => {
 		// Cheok path
 		svg
 			.append('path')
-			.data([xirrCheok])
+			.data([arrayedCheok])
 			.style('fill', 'none')
-			.attr('d', xirrLine)
+			.attr('d', neLiqLine)
 			.attr('id', 'cheokChart')
 			.attr('stroke', '#00d1b2')
 			.attr('stroke-width', '2')
@@ -150,7 +142,7 @@ const XIRRChart = () => {
 		// Base value
 		svg
 			.append('text')
-			.data([xirrCheok[0]])
+			.data([arrayedCheok[0]])
 			.attr('transform', (d) => {
 				return `translate(${xScale(xMin)}, ${yScale(d.arrayed)})`;
 			})
@@ -158,7 +150,7 @@ const XIRRChart = () => {
 			.attr('x', -10)
 			.attr('dy', '0.35em')
 			.style('font-size', responsiveFontSize)
-			.text(`${numberWithCommas(xirrCheok[0].arrayed)}%`);
+			.text(`$${numberWithCommas(arrayedCheok[0].arrayed)}`);
 
 		// Base line
 		svg
@@ -168,7 +160,7 @@ const XIRRChart = () => {
 			.style('opacity', 0.4)
 			.attr(
 				'transform',
-				`translate(${xScale(xMin)}, ${yScale(xirrCheok[0].arrayed)})`
+				`translate(${xScale(xMin)}, ${yScale(arrayedCheok[0].arrayed)})`
 			)
 			.attr('x2', (d) => {
 				return xScale(xMax);
@@ -176,8 +168,8 @@ const XIRRChart = () => {
 
 		const cheokG = svg.append('g').data([
 			{
-				first: xirrCheok[0],
-				last: xirrCheok[xirrCheok.length - 1],
+				first: arrayedCheok[0],
+				last: arrayedCheok[arrayedCheok.length - 1],
 			},
 		]);
 
@@ -192,7 +184,7 @@ const XIRRChart = () => {
 			.style('font-size', responsiveFontSize)
 			.style('font-weight', 'bold')
 			.text((d) => {
-				return `${numberWithCommas(d.last.arrayed)}%`;
+				return `$${numberWithCommas(Math.floor(d.last.arrayed))}`;
 			});
 
 		cheokG
@@ -226,7 +218,7 @@ const XIRRChart = () => {
 			.attr('text-anchor', 'end')
 			.attr('dy', '0.35em')
 			.style('font-size', responsiveFontSize)
-			.text(`${numberWithCommas(yMin)}%`);
+			.text(`$${numberWithCommas(Math.floor(yMin))}`);
 
 		// Chart ceiling line
 		svg
@@ -247,7 +239,7 @@ const XIRRChart = () => {
 			.attr('text-anchor', 'end')
 			.attr('dy', '0.35em')
 			.style('font-size', responsiveFontSize)
-			.text(`${numberWithCommas(yMax)}%`);
+			.text(`$${numberWithCommas(Math.floor(yMax))}`);
 
 		let i = 0;
 		d3.timer(() => {
@@ -258,7 +250,10 @@ const XIRRChart = () => {
 		});
 	});
 
-	return <div id='chart'></div>;
+	return (
+		<div id='chart'>
+		</div>
+	);
 };
 
-export default XIRRChart;
+export default NetLiqChart;

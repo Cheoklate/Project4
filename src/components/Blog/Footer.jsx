@@ -10,7 +10,7 @@ function Copyright() {
     <Typography variant="body2" color="text.secondary" align="center">
       {'Copyright © '}
       <Link color="inherit" href="/">
-        Your Website
+        Cheok Capital
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}

@@ -1,5 +1,5 @@
-export default function personModel(sequelize, DataTypes) {
-    return sequelize.define('person', {
+export default function initUsersModel(sequelize, DataTypes) {
+    return sequelize.define('user', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -13,19 +13,19 @@ export default function personModel(sequelize, DataTypes) {
         type: DataTypes.STRING,
       },
       admin: {
-        type: DataTypes.BOOL,
+        type: DataTypes.BOOLEAN,
       },
-      firstName:{
+      first_name:{
         type: DataTypes.STRING,
       },
-      lastName:{
+      last_name:{
         type: DataTypes.STRING,
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: DataTypes.DATE,
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: DataTypes.DATE,
       },
